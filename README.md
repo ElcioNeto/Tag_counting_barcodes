@@ -5,7 +5,7 @@ A Program in R for counting tags and identification of samples using barcodes
 
 The program works as a Rscript. 
 
-To see the possible entrances of the program:
+To see the possible entrances of the program, type:
 
       Rscript script_tag_count_and_sequence_barcode_removal.R --help
 
