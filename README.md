@@ -31,9 +31,12 @@ The following output will be generate
 		Show this help message and exit
 
 The program needs obligatorily of a -f entrance, that is a .fasta file and the -b that is a .txt barcode file.
+
 If only the obligated filleds be fullfilled, the program will produce 2 outputs files.
+
 The options -t and -n are optional. If the user types YES in one (or both) of this options, one (or two) more file(s) will be created
-The -i option will only change the methodology, but will not influence the outputs. It may be and alternative,when the processment is taking to long.   
+
+The -i option will only change the methodology, but will not influence the amount of outputs. It may be and alternative when the processment is taking to long.   
 
 ### Autors
 Daniel K. Morais (https://github.com/kdanielmorais)
