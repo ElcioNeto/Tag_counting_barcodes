@@ -19,14 +19,11 @@ The following output will be generate
 		A barcode file [Required]
 
 	-t TAG, --tag=TAG
-		write YES if you want to see the header with tag pair [default= NO] 
+		write TRUE if you want to see the header with tag pair [default= NO] 
 
 	-n CHARACTER, --name=CHARACTER
-		write YES if you want to see the names with tags in the sequence [default= NO] 
-
-	-i CHARACTER, --inv=CHARACTER
-		write YES if you want to invert the orientation of the read (recommended if the processment is taking to long) [default= NO] 
-
+		write TRUE if you want to see the names with tags in the sequence [default= NO] 
+	
 	-h, --help
 		Show this help message and exit
 
