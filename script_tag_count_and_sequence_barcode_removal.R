@@ -23,14 +23,11 @@ option_list1 = list(
         help="A joined .fasta file [Required]", metavar="character"),
   make_option(c("-b", "--bar"), type="character", 
         help="A barcode file [Required]", metavar="character"),
-  make_option(c("-t", "--tag"), type="character", default= "NO", action= "store",
-        help="write YES if you want to see the header with tag pair [default= %default] "),
-  make_option(c("-n", "--name"), type="character", default="NO", action= "store",
-        help="write YES if you want to see the names with tags in the sequence [default= %default] ", metavar="character"),
-  make_option(c("-i", "--inv"), type="character", default="NO", action= "store",
-              help="write YES if you want to invert the orientation of the read (recommended if the processment is taking to long) [default= %default] ", metavar="character")
-
-)
+  make_option(c("-t", "--tag"), type="character", default= "FALSE", action= "store",
+        help="write TRUE if you want to see the header with tag pair [default= %default] "),
+  make_option(c("-n", "--name"), type="character", default="FALSE", action= "store",
+        help="write TRUE if you want to see the names with tags in the sequence [default= %default] ", metavar="character"),
+  )
 
 opt_parser = OptionParser(option_list=option_list1);
 opt = parse_args(opt_parser)
@@ -74,13 +71,13 @@ fwd_cols = ncol(df_base_fasta)
 # finding fwd barc first.
 hit_fwd_bc = sapply(df_base_fasta[3:fwd_cols], barcodes[,3], FUN = match) 
 
-if (a3 == "YES") {
+#if (a3 == "TRUE") {
 ##Deprecated (taking too long for processing)
 #Changing orientation of reads
-for (j in 1:length(numb_forward_bc)) {
-df_base_fasta[which(is.na(hit_fwd_bc[,j])),2] <- sapply(df_base_fasta[which(is.na(hit_fwd_bc[,j])),2], revcomp)
-}
-}
+#for (j in 1:length(numb_forward_bc)) {
+#df_base_fasta[which(is.na(hit_fwd_bc[,j])),2] <- sapply(df_base_fasta[which(is.na(hit_fwd_bc[,j])),2], revcomp)
+#}
+#}
 cat("\n")
 
 #Changing orientation of reads and checking fwd primer issues
@@ -139,7 +136,7 @@ headers_with2_tags = which(!is.na(isolating2)[3,]) #getting only the sequences t
 #isolating2[,which(!is.na(isolating2)[3,])]
 two_tags_headers_and_seq = df_base_fasta[headers_with2_tags,c(1,2)] 
 
-if (g1 == "YES") {
+if (g1 == "TRUE") {
   taged_seqs = as.vector(t(two_tags_headers_and_seq))
   write(taged_seqs,"tagged_fasta.fasta")
   cat("\n")
@@ -152,8 +149,6 @@ all_tags = apply(transposed_tags, 1, paste, collapse = "|")
 counted_tags = as.data.frame(table(all_tags))
 sorted_counted_tags = counted_tags[order(counted_tags[,2],decreasing = T),]
 
-write.table(sorted_counted_tags, "read_counts2.tsv", row.names = F, sep = "\t", quote = F)
-
 #Changing headers
 sample_name_bc = data.frame(samples = barcodes[,1], barcodes = apply(barcodes[,c(4,8)], 1, paste, collapse = "|"), fwd_size = barcodes[,2], rev_size = barcodes[,6], stringsAsFactors = F)
 sample_ids_with_tag_position = sample_name_bc[match(all_tags, sample_name_bc$barcodes),c(1,3,4)]
@@ -162,10 +157,15 @@ renaming_tags = data.frame(headers, sample_ids_with_tag_position, stringsAsFacto
 appending_seq = cbind(renaming_tags, two_tags_headers_and_seq)
 removed_NA_id_seqs = appending_seq[which(!is.na(appending_seq[,2])),]
 
+name = sample_name_bc[match( sorted_counted_tags[,1], sample_name_bc[,2]),1]
+sorted_counted_tags$tags_name=name
+
+write.table(sorted_counted_tags, "read_counts2.tsv", row.names = F, sep = "\t", quote = F)
+
 #write file sequences with name but still with tags
 final_renamed_sequences_with_tags_df = cbind(apply(removed_NA_id_seqs[,c(1,2)], 1,paste, collapse = "|"), removed_NA_id_seqs[,6])
 
-if (g2 == "YES"){
+if (g2 == "TRUE"){
   named_seqs_with_tags = as.vector(t(final_renamed_sequences_with_tags_df))
   write(named_seqs_with_tags,"renamed_fasta_with_tags.fasta")
   cat("\n")
