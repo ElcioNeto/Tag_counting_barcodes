@@ -8,14 +8,6 @@ list.of.packages = c("optparse", "stringi")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,  repos = "http://cran.us.r-project.org")
 
-list.of.packages = c( "phyloseq")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages))
-{
-  source('http://bioconductor.org/biocLite.R')
-  biocLite('phyloseq')
-}
-
 library("optparse")
 
 option_list1 = list(
@@ -24,9 +16,9 @@ option_list1 = list(
   make_option(c("-b", "--bar"), type="character", 
         help="A barcode file [Required]", metavar="character"),
   make_option(c("-t", "--tag"), type="character", default= "FALSE", action= "store",
-        help="write TRUE if you want to see the header with tag pair [default= %default] "),
+        help="write TRUE if you want to see the header of the sequence with a tag pair [default= %default] "),
   make_option(c("-n", "--name"), type="character", default="FALSE", action= "store",
-        help="write TRUE if you want to see the names with tags in the sequence [default= %default] ", metavar="character"),
+        help="write TRUE if you want the final sequences named and the barcode tags kept in the sequences, if FALSE, barcode tags will be trimmed off [default= %default] ", metavar="character"),
   )
 
 opt_parser = OptionParser(option_list=option_list1);
@@ -36,7 +28,6 @@ g1 <- opt$tag
 g2 <- opt$name
 a1 <- opt$fast
 a2 <- opt$bar
-a3 <- opt$inv
 
 cat(timestamp())
 cat("\n")
@@ -71,13 +62,6 @@ fwd_cols = ncol(df_base_fasta)
 # finding fwd barc first.
 hit_fwd_bc = sapply(df_base_fasta[3:fwd_cols], barcodes[,3], FUN = match) 
 
-#if (a3 == "TRUE") {
-##Deprecated (taking too long for processing)
-#Changing orientation of reads
-#for (j in 1:length(numb_forward_bc)) {
-#df_base_fasta[which(is.na(hit_fwd_bc[,j])),2] <- sapply(df_base_fasta[which(is.na(hit_fwd_bc[,j])),2], revcomp)
-#}
-#}
 cat("\n")
 
 #Changing orientation of reads and checking fwd primer issues
@@ -107,7 +91,7 @@ for (j in (numb_reverse_bc)-1){
 }
 rev_cols = ncol(df_base_fasta)
 
-# finding fwd_barc again but having all seqs in the same frame (orientation)
+# finding fwd_barc again but having all seqs in the same orientation
 hit_fwd_bc = sapply(df_base_fasta[3:fwd_cols], barcodes[,3], FUN = match)
 
 #appending read names with fwd tag ID
@@ -115,7 +99,7 @@ for (i in (1:nrow(barcodes))){
   for ( j in 1:length(numb_forward_bc)) {
     df_base_fasta[c(which(hit_fwd_bc[,j] == i)),1] <- paste(df_base_fasta[c(which(hit_fwd_bc[,j] == i)),1], barcodes[i,4], sep = "|")
   }
-} #took 49 secs
+}
 
 #appending read names with rev tag ID
 hits_rev_bc = as.matrix(sapply(df_base_fasta[,((fwd_cols)+1):rev_cols], rev_comp_bc, FUN = match)) #finding rev_barc, having all seqs in the same frame (orientation)
@@ -125,8 +109,6 @@ for (i in (1:nrow(barcodes))){
     df_base_fasta[c(which(hits_rev_bc[,j] == i)),1] <- paste(df_base_fasta[c(which(hits_rev_bc[,j] == i)),1], barcodes[i,8], sep = "|")
   }
 }
-
-#took 65 secs
 
 #Filtering sequences with tags
 isolating = strsplit(df_base_fasta[,1], "\\|")
@@ -160,6 +142,7 @@ removed_NA_id_seqs = appending_seq[which(!is.na(appending_seq[,2])),]
 name = sample_name_bc[match( sorted_counted_tags[,1], sample_name_bc[,2]),1]
 sorted_counted_tags$tags_name=name
 
+#Write the counts of each tag pair and the sample names for each tag pair, based on the barcodes file.
 write.table(sorted_counted_tags, "read_counts2.tsv", row.names = F, sep = "\t", quote = F)
 
 #write file sequences with name but still with tags
