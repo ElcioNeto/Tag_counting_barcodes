@@ -28,7 +28,6 @@ g1 <- opt$tag
 g2 <- opt$name
 a1 <- opt$fast
 a2 <- opt$bar
-a3 <- opt$inv
 
 cat(timestamp())
 cat("\n")
