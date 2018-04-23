@@ -1,5 +1,5 @@
 cat("\n")
-cat("Program version 1.0   Access at https://github.com/ElcioNeto/Tag_counting_barcodes ")
+cat("Program version 1.0   Access at https://github.com/kdanielmorais/Tag_counting_barcodes ")
 cat("\n")
 cat("\n")
 
@@ -18,11 +18,16 @@ option_list1 = list(
   make_option(c("-t", "--tag"), type="character", default= "FALSE", action= "store",
         help="write TRUE if you want to see the header of the sequence with a tag pair [default= %default] "),
   make_option(c("-n", "--name"), type="character", default="FALSE", action= "store",
-        help="write TRUE if you want the final sequences named and the barcode tags kept in the sequences, if FALSE, barcode tags will be trimmed off [default= %default] ", metavar="character"),
+        help="write TRUE if you want the final sequences named and the barcode tags kept in the sequences, if FALSE, barcode tags will be trimmed off [default= %default] ", metavar="character")
   )
 
 opt_parser = OptionParser(option_list=option_list1);
 opt = parse_args(opt_parser)
+
+if (is.null(opt$fast)){
+  print_help(opt_parser)
+  stop("At least two input files must be supplied. \n--fast [sequences.fasta] and --bar [barcodes.txt] )\n", call.=FALSE)
+}
 
 g1 <- opt$tag
 g2 <- opt$name
