@@ -26,7 +26,7 @@ opt = parse_args(opt_parser)
 
 if (is.null(opt$fast)){
   print_help(opt_parser)
-  stop("At least two input files must be supplied. \n--fast [sequences.fasta] and --bar [barcodes.txt] )\n", call.=FALSE)
+  stop("At least two input files must be supplied. \n--fast [sequences.fasta] and --bar [barcodes.txt] \n", call.=FALSE)
 }
 
 g1 <- opt$tag
@@ -76,7 +76,7 @@ test_if_more_than_one_fwd_barcode_hit_a_sequence = which(no_fwd_hits >1)
 #checking if multiple forward barcodes are hitting the same sample
 if(length(test_if_more_than_one_fwd_barcode_hit_a_sequence)>0) {
   cat("error!\nMultiple barcodes hitting the same sequence.")
-} else { cat("Forward barcodes are fine")
+} else { cat("Forward barcodes are fine \n")
 }
 position_of_no_fwd_hits = which(no_fwd_hits == 0)
 
