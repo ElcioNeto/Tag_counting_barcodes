@@ -34,12 +34,15 @@ g2 <- opt$name
 a1 <- opt$fast
 a2 <- opt$bar
 
-cat(timestamp())
-cat("\n")
+timestamp()
+cat("\nLoading data")
 #Entering data
 #Get sequences fasta and barcodes file
-fasta_df = read.delim(a1, header = F, stringsAsFactors = F) # took 30 seconds
+fasta_df = read.delim(a1, header = F, stringsAsFactors = F)
 barcodes = read.delim(a2, header = F, stringsAsFactors = F)
+timestamp()
+cat("\nFinished loading data")
+cat("\nChecking barcodes")
 numb_forward_bc = unique(barcodes[,2])
 numb_reverse_bc = unique(barcodes[,6])
 
@@ -78,6 +81,7 @@ if(length(test_if_more_than_one_fwd_barcode_hit_a_sequence)>0) {
   cat("error!\nMultiple barcodes hitting the same sequence.")
 } else { cat("Forward barcodes are fine \n")
 }
+timestamp()
 position_of_no_fwd_hits = which(no_fwd_hits == 0)
 
 df_base_fasta[position_of_no_fwd_hits,2] <- sapply(df_base_fasta[position_of_no_fwd_hits,2], revcomp)
@@ -165,5 +169,6 @@ named_seqs_without_tags = as.vector(t(final_renamed_sequences_no_tags_df))
 
 write(named_seqs_without_tags,"renamed_fasta_without_tags.fasta")
 
-cat(timestamp())
-cat("\n")
+timestamp()
+cat("\nEnd of Analysis")
+cat("\Check if your outputs are correct.")
