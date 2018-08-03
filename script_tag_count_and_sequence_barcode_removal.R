@@ -35,7 +35,7 @@ a1 <- opt$fast
 a2 <- opt$bar
 
 timestamp()
-cat("\nLoading data")
+cat("\nLoading data\n")
 #Entering data
 #Get sequences fasta and barcodes file
 fasta_df = read.delim(a1, header = F, stringsAsFactors = F)
